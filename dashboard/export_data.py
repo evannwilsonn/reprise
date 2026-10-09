@@ -59,8 +59,13 @@ def main() -> None:
         def run(sql):
             cur = con.execute(sql)
             return [c[0] for c in cur.description], cur.fetchall()
+    import yaml
+    vars_ = yaml.safe_load((ROOT / "dbt_project.yml").read_text())["vars"]
+    results = ROOT / "target" / "run_results.json"
+    tests = sum(1 for r in json.loads(results.read_text())["results"] if r["unique_id"].startswith("test.")) if results.exists() else None
     out = {"generated": datetime.now().isoformat(timespec="seconds"), "source": args.target,
-           "manifest": json.loads((ROOT / "data" / "raw" / "_manifest.json").read_text())}
+           "manifest": json.loads((ROOT / "data" / "raw" / "_manifest.json").read_text()),
+           "meta": {"amortisation_months": vars_["amortisation_months"], "dbt_tests": tests}}
     for key, sql in TABLES.items():
         cols, rows = run(sql)
         out[key] = [{c: clean(v) for c, v in zip(cols, r)} for r in rows]

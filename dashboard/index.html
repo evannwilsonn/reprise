@@ -5,331 +5,429 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Reprise</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500;700;900&family=Red+Hat+Mono:wght@400;500;600&family=Red+Hat+Text:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <style>
-/* Layout: an experiment write-up you can operate. Question and answer up top, controls in one row, then the evidence chart by chart, then the assumptions. */
 :root{
   color-scheme:light;
-  --bg:#f5f5f3;--surface:#fcfcfb;--surface-2:#f0f0ed;--line:#e2e1dc;--line-2:#cfcec8;
-  --text:#0b0b0b;--text-2:#52514e;--text-3:#77766f;
-  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;
-  --t-hbm:#104281;--t-dram:#256abf;--t-ssd:#5598e7;--t-hdd:#9ec5f4;--t-recomp:#b9b8b1;
-  --ok:#16865a;--ok-bg:rgba(22,134,90,.10);--warn:#a8630f;--warn-bg:rgba(168,99,15,.12);--bad:#c2412d;--bad-bg:rgba(194,65,45,.10);
-  --focus:#2a78d6;
-  --font:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --bg:#f6f7f8;--bg-2:#eceef1;--ink:#0f1720;--ink-2:#465160;--ink-3:#687280;--rule:#d5dae0;--rule-2:#b9c0c9;
+  --hbm:#104281;--dram:#256abf;--ssd:#4f93e5;--hdd:#8fbcf1;
+  --amber:#c27700;--amber-ink:#8a5300;--amber-field:#f4e2bd;
+  --mark:#0f1720;--good:#147a52;--bad:#b3392a;--good-bg:#dcefe6;--bad-bg:#f6dedb;
+  --sel:#cfe0f7;
+  --display:"Red Hat Display",ui-sans-serif,system-ui,sans-serif;
+  --text:"Red Hat Text",ui-sans-serif,system-ui,sans-serif;
+  --mono:"Red Hat Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  color-scheme:dark;--bg:#121211;--surface:#1a1a19;--surface-2:#222220;--line:#2e2e2b;--line-2:#3d3d39;
-  --text:#ffffff;--text-2:#c3c2b7;--text-3:#94938a;--s1:#3987e5;--s2:#d95926;--s3:#199e70;
-  --t-hbm:#86b6ef;--t-dram:#5598e7;--t-ssd:#2a78d6;--t-hdd:#184f95;--t-recomp:#55544f;
-  --ok:#4cc38a;--ok-bg:rgba(76,195,138,.12);--warn:#e0a24a;--warn-bg:rgba(224,162,74,.13);--bad:#ff7a6b;--bad-bg:rgba(255,122,107,.12);--focus:#7ea8ff}}
+  color-scheme:dark;--bg:#0c1016;--bg-2:#141a22;--ink:#e9eef3;--ink-2:#b2bcc8;--ink-3:#8b96a3;--rule:#262e39;--rule-2:#3a4552;
+  --hbm:#b7d3f6;--dram:#7fb0ee;--ssd:#4a8be0;--hdd:#2b62ad;
+  --amber:#f0a73a;--amber-ink:#f5c27a;--amber-field:#3a2c14;--mark:#e9eef3;--good:#5ccf98;--bad:#ff8a7a;--good-bg:#12301f;--bad-bg:#3a1915;--sel:#24426b}}
 :root[data-theme="dark"]{
-  color-scheme:dark;--bg:#121211;--surface:#1a1a19;--surface-2:#222220;--line:#2e2e2b;--line-2:#3d3d39;
-  --text:#ffffff;--text-2:#c3c2b7;--text-3:#94938a;--s1:#3987e5;--s2:#d95926;--s3:#199e70;
-  --t-hbm:#86b6ef;--t-dram:#5598e7;--t-ssd:#2a78d6;--t-hdd:#184f95;--t-recomp:#55544f;
-  --ok:#4cc38a;--ok-bg:rgba(76,195,138,.12);--warn:#e0a24a;--warn-bg:rgba(224,162,74,.13);--bad:#ff7a6b;--bad-bg:rgba(255,122,107,.12);--focus:#7ea8ff}
+  color-scheme:dark;--bg:#0c1016;--bg-2:#141a22;--ink:#e9eef3;--ink-2:#b2bcc8;--ink-3:#8b96a3;--rule:#262e39;--rule-2:#3a4552;
+  --hbm:#b7d3f6;--dram:#7fb0ee;--ssd:#4a8be0;--hdd:#2b62ad;
+  --amber:#f0a73a;--amber-ink:#f5c27a;--amber-field:#3a2c14;--mark:#e9eef3;--good:#5ccf98;--bad:#ff8a7a;--good-bg:#12301f;--bad-bg:#3a1915;--sel:#24426b}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 var(--font)}
-:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
-.wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;padding-inline:20px}
-.eyebrow{font:500 12px var(--mono);color:var(--text-3);letter-spacing:.02em}
-h1{margin:6px 0 8px;font-size:clamp(28px,4vw,40px);line-height:1.1;font-weight:700;letter-spacing:-.02em;text-wrap:balance;max-width:24ch}
-.lede{margin:0;max-width:68ch;color:var(--text-2);font-size:16px}
-.lede b{color:var(--text);font-weight:600}
-.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:20px 0 14px;position:sticky;top:env(safe-area-inset-top,0px);z-index:4;background:var(--bg);padding-block:8px}
-.controls label{font-size:12.5px;color:var(--text-3);margin-right:-4px}
-select{font:500 13.5px var(--font);color:var(--text);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;cursor:pointer;max-width:100%}
-.seg{display:flex;background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:3px;flex-wrap:wrap}
-.seg button{font:500 13px var(--font);color:var(--text-2);background:none;border:0;border-radius:6px;padding:6px 11px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--text);color:var(--bg)}
-.scdesc{font-size:13px;color:var(--text-2);flex-basis:100%}
-.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0;display:flex;flex-direction:column;gap:3px}
-.tile .lbl{font-size:13px;color:var(--text-2);font-weight:500}
-.tile .v{font-size:32px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
-.tile .d{font-size:12.5px;color:var(--text-3)}
-.pill{display:inline-flex;align-items:center;gap:6px;font:600 11.5px var(--font);border-radius:999px;padding:2px 9px;white-space:nowrap;align-self:flex-start}
-.pill.ok{color:var(--ok);background:var(--ok-bg)}.pill.warn{color:var(--warn);background:var(--warn-bg)}.pill.bad{color:var(--bad);background:var(--bad-bg)}.pill.na{color:var(--text-3);background:var(--surface-2)}
-.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-section.fig{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;margin-top:12px;min-width:0}
-.fig h2{margin:0;font-size:21px;letter-spacing:-.01em;font-weight:600;text-wrap:balance}
-.fig .q{margin:2px 0 12px;color:var(--text-2);font-size:14px;max-width:80ch}
-.fig .take{margin:12px 0 0;padding:10px 12px;background:var(--surface-2);border-radius:8px;font-size:14px;color:var(--text-2);max-width:90ch}
-.fig .take b{color:var(--text);font-weight:600}
-.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.two section.fig{margin-top:12px}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--text-2);margin-bottom:8px}
-.legend i{display:inline-block;width:12px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
-.legend i.ln{height:2px;vertical-align:3px}
-.plot{position:relative}.plot svg{display:block;width:100%;height:auto;overflow:visible}
-.ax{font:11px var(--mono);fill:var(--text-3)}.axl{font:12.5px var(--font);fill:var(--text-2)}.val{font:500 11.5px var(--mono);fill:var(--text-2)}
-.gridl{stroke:var(--line)}
-.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:7px 10px;font-size:12.5px;white-space:nowrap;opacity:0;transform:translate(-50%,calc(-100% - 10px));transition:opacity .1s;z-index:9;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-.tip.on{opacity:1}.tip b{font-weight:600}
+html{scrollbar-color:var(--rule-2) var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--text);-webkit-font-smoothing:antialiased}
+::selection{background:var(--sel);color:var(--ink)}
+:focus-visible{outline:2px solid var(--dram);outline-offset:3px;border-radius:3px}
+a{color:inherit;text-decoration-color:var(--rule-2);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+code{font:500 .92em var(--mono)}
+.page{max-width:1240px;margin:0 auto;padding-inline:clamp(16px,4vw,48px);padding-block:clamp(20px,4vw,40px) 64px}
+.mast{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--rule)}
+.word{font:900 20px/1 var(--display);letter-spacing:-.01em}
+.word span{font:500 14px var(--text);color:var(--ink-3);margin-left:10px;letter-spacing:0}
+.mast nav{display:flex;gap:18px;font-size:14px;color:var(--ink-2)}
+h1{font:700 clamp(32px,5.4vw,64px)/1.02 var(--display);letter-spacing:-.03em;margin:clamp(20px,3.5vw,40px) 0 0;max-width:18ch;text-wrap:balance}
+.answer{font-size:clamp(17px,1.7vw,20px);line-height:1.5;color:var(--ink-2);max-width:62ch;margin:18px 0 0}
+.answer b{color:var(--ink);font-weight:600}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-top:clamp(22px,3vw,32px)}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--rule-2);border-radius:999px;padding:3px;background:var(--bg)}
+.seg button{font:500 14px var(--text);color:var(--ink-2);background:none;border:0;border-radius:999px;padding:7px 14px;cursor:pointer;transition:background .2s,color .2s}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.sel{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-3)}
+.sel select{font:500 14px var(--text);color:var(--ink);background:var(--bg);border:1px solid var(--rule-2);border-radius:999px;padding:7px 30px 7px 14px;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink-2) 50%),linear-gradient(135deg,var(--ink-2) 50%,transparent 50%);background-position:calc(100% - 16px) 52%,calc(100% - 11px) 52%;background-size:5px 5px;background-repeat:no-repeat;cursor:pointer;max-width:100%}
+.scnote{font-size:14px;color:var(--ink-3);flex-basis:100%;margin-top:-4px}
+
+.ruler{position:relative;margin-top:16px;user-select:none;touch-action:pan-y}
+.track-label{font:600 13.5px var(--text);color:var(--ink-2);margin:0 0 6px}
+.track:last-of-type .track-label{margin:6px 0 0}
+.lane{position:relative}
+.lrow{position:relative;height:30px}
+.lrow .dot{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--c);box-shadow:0 0 0 3px var(--bg);transition:left .7s cubic-bezier(.16,1,.3,1)}
+.lrow.ghost .dot{background:var(--bg);box-shadow:0 0 0 2px var(--ink-3) inset,0 0 0 3px var(--bg)}
+.lrow .guide{position:absolute;top:50%;height:0;border-top:1px dotted var(--rule-2);transition:left .7s cubic-bezier(.16,1,.3,1),width .7s cubic-bezier(.16,1,.3,1)}
+.lrow .tag{position:absolute;z-index:1;top:50%;transform:translateY(-50%);background:var(--bg);padding:0 4px;border-radius:3px;font:600 13.5px var(--text);white-space:nowrap;color:var(--ink);transition:left .7s cubic-bezier(.16,1,.3,1),right .7s cubic-bezier(.16,1,.3,1)}
+.lrow .tag small{font:500 12.5px var(--mono);color:var(--ink-3);margin-left:8px}
+.lrow.slow .tag small{color:var(--bad)}
+.lrow.rc .tag small{color:var(--amber-ink)}
+.axis{position:relative;height:46px;border-top:2px solid var(--ink)}
+.axis .tk{position:absolute;top:-2px;width:1px;background:var(--ink)}
+.axis .tk.major{height:14px;width:2px;margin-left:-1px}
+.axis .tk.minor{height:7px;background:var(--ink-3)}
+.axis .lab{position:absolute;top:16px;transform:translateX(-50%);font:500 13px var(--mono);color:var(--ink);white-space:nowrap}
+.band{position:absolute;top:0;bottom:0;background:var(--amber-field);border-inline:1.5px solid var(--amber)}
+.band-lab{position:absolute;top:-22px;font:600 12.5px var(--text);color:var(--amber-ink);white-space:nowrap;transform:translateX(-50%)}
+.pin{position:absolute;bottom:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;transition:left .7s cubic-bezier(.16,1,.3,1)}
+.pin .stem{width:2px;background:var(--c);height:var(--stem,22px)}
+.pin .dot{width:14px;height:14px;border-radius:50%;background:var(--c);box-shadow:0 0 0 3px var(--bg);margin-bottom:-8px}
+.pin .tag{font:600 13.5px var(--text);white-space:nowrap;color:var(--ink);margin-bottom:4px;text-align:center;line-height:1.25}
+.pin .tag small{display:block;font:500 12px var(--mono);color:var(--ink-3)}
+.pin.slow .tag small{color:var(--bad)}
+.pin.down{bottom:auto;top:0;flex-direction:column-reverse}
+.pin.down .dot{margin:-8px 0 0}
+.pin.down .tag{margin:4px 0 0}
+.pin.ghost .dot{background:var(--bg);box-shadow:0 0 0 2px var(--ink-3) inset,0 0 0 3px var(--bg)}
+.pin.ghost .stem{background:var(--ink-3)}
+.pin.edge-l{transform:translateX(-8px);align-items:flex-start}
+.pin.edge-r{transform:translateX(calc(-100% + 8px));align-items:flex-end}
+.pin.edge-l .tag{text-align:left}.pin.edge-r .tag{text-align:right}
+.cursor{position:absolute;z-index:5;top:0;bottom:0;width:0;border-left:1px dashed var(--ink-2);pointer-events:none;opacity:0;transition:opacity .15s}
+.cursor.on{opacity:1}
+.readout{position:absolute;top:calc(100% + 8px);background:var(--ink);color:var(--bg);font:500 12.5px var(--text);padding:7px 10px;border-radius:6px;width:max-content;max-width:min(300px,86vw);white-space:normal;pointer-events:none;line-height:1.45;box-shadow:0 6px 18px rgba(15,23,32,.18)}
+.readout b{font:600 13px var(--mono)}
+.readout .n{opacity:.72}
+.hint{font-size:13px;color:var(--ink-3);margin:10px 0 0}
+
+section.chapter{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(20px,4vw,56px);padding-block:clamp(40px,6vw,72px);border-top:1px solid var(--rule)}
+section.chapter:first-of-type{margin-top:clamp(36px,5vw,56px)}
+.chapter h2{font:700 clamp(24px,2.6vw,32px)/1.12 var(--display);letter-spacing:-.02em;margin:0;text-wrap:balance}
+.chapter .lead{color:var(--ink-2);margin:14px 0 0;max-width:46ch}
+.chapter .lead b{color:var(--ink);font-weight:600}
+.chapter .src{font-size:13px;color:var(--ink-3);margin-top:14px;max-width:46ch}
+.fig{min-width:0}
+.plot svg{display:block;width:100%;height:auto;overflow:visible}
+.ax{font:500 12px var(--mono);fill:var(--ink-3)}
+.lbl{font:600 13.5px var(--text);fill:var(--ink)}
+.lbl2{font:500 13px var(--text);fill:var(--ink-2)}
+.num{font:600 12.5px var(--mono);fill:var(--ink)}
+.gl{stroke:var(--rule)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--ink-2);margin:0 0 12px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-1px}
 .tbl{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-th{font-weight:500;color:var(--text-3);text-align:right;padding:8px 8px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}
-th:first-child,td:first-child{text-align:left}
-td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-td.heat{font:500 12.5px var(--mono)}
-.findings{display:grid;gap:10px;margin:0;padding:0;list-style:none;counter-reset:f}
-.findings li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px 12px 44px;position:relative;font-size:14.5px;color:var(--text-2);max-width:none}
-.findings li::before{counter-increment:f;content:counter(f);position:absolute;left:14px;top:12px;font:600 13px var(--mono);color:var(--text-3)}
-.findings b{color:var(--text);font-weight:600}
-h3.sec{margin:28px 2px 10px;font-size:13px;font-weight:600;color:var(--text-3);letter-spacing:.04em;text-transform:uppercase}
-footer{margin-top:26px;font-size:13px;color:var(--text-3);line-height:1.65;max-width:100ch}
-footer a{color:var(--text-2)}
-footer p{margin:0 0 8px}
-@media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}}
-@media (max-width:480px){.tiles{grid-template-columns:1fr}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font:600 12px var(--mono);letter-spacing:.03em;text-transform:uppercase;color:var(--ink-3);text-align:right;padding:0 10px 10px;border-bottom:2px solid var(--ink);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;padding-left:0}
+td{padding:11px 10px;border-bottom:1px solid var(--rule);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.m{font:500 14px var(--mono)}
+tr.cur td{background:var(--bg-2)}
+tr[data-sc]{cursor:pointer}
+tr[data-sc]:hover td{background:var(--bg-2)}
+.flag{font:600 12px var(--mono);padding:2px 7px;border-radius:4px}
+.flag.over{color:var(--bad);background:var(--bad-bg)}.flag.ok{color:var(--good);background:var(--good-bg)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 40px;margin:0}
+.facts h3{font:700 18px var(--display);margin:0 0 6px}
+.facts p{margin:0;color:var(--ink-2);font-size:15px}
+.findings{list-style:none;margin:0;padding:0}
+.findings li{padding:16px 0;border-bottom:1px solid var(--rule);color:var(--ink-2);font-size:15.5px;max-width:78ch}
+.findings li:first-child{padding-top:0}
+.findings li b{color:var(--ink);font-weight:600}
+.findings .v{display:inline-block;font:600 11.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-right:10px;vertical-align:1px}
+.v.holds{color:var(--good);background:var(--good-bg)}.v.limits{color:var(--amber-ink);background:var(--amber-field)}.v.fails{color:var(--bad);background:var(--bad-bg)}
+footer{border-top:2px solid var(--ink);margin-top:20px;padding-top:18px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-3)}
+section.chapter.wide-fig{grid-template-columns:1fr}
+.wide-fig .lead{max-width:70ch}
+@media (max-width:860px){section.chapter{grid-template-columns:1fr}.facts{grid-template-columns:1fr}}
+@media (max-width:560px){table .wide{display:none}th,td{padding-inline:6px}}
+@media (max-width:560px){.axis .lab.odd{display:none}.lrow .tag{font-size:12.5px}.lrow .tag small{display:block;margin:0;font-size:11.5px}.lrow{height:44px}.axis .lab{font-size:11px}.pin .tag{font-size:12px}.pin .tag small{font-size:11px}.track-label{font-size:12.5px}.mast nav{display:none}.word span{display:block;margin:6px 0 0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="eyebrow">Reprise · KV-cache tiering, replayed on real production traffic</div>
+<div class="page">
+  <header class="mast">
+    <div class="word">Reprise<span>KV-cache tiering on real AI traffic</span></div>
+    <nav aria-label="Project links"><a href="#method">Method</a><a href="https://github.com/evannwilsonn/reprise" target="_blank" rel="noopener">Code</a></nav>
+  </header>
+
   <h1>Keep an AI's context in storage, or recompute it?</h1>
-  <p class="lede" id="lede"></p>
+  <p class="answer" id="answer"></p>
 
-  <div class="controls" role="group" aria-label="Choose what to show">
-    <label for="sc">Cluster</label><select id="sc"></select>
-    <div class="seg" id="tr" role="group" aria-label="Workload"></div>
-    <div class="scdesc" id="scdesc"></div>
+  <div class="controls" role="group" aria-label="Choose the traffic and the cluster">
+    <div class="seg" id="wl" role="group" aria-label="Traffic"></div>
+    <label class="sel" for="sc">Cluster <select id="sc"></select></label>
+    <div class="scnote" id="scnote"></div>
   </div>
 
-  <div class="tiles" id="tiles"></div>
+  <div class="ruler" id="ruler" tabindex="0" role="slider" aria-label="Time on the ruler" aria-valuemin="0.01" aria-valuemax="10000" aria-valuetext="Point or use arrow keys to read a time">
+    <div class="track">
+      <p class="track-label" style="margin-bottom:28px">One 512-token block of context: fetch it, or recompute it</p>
+      <div class="lane" id="lane-block"></div>
+    </div>
+    <div class="axis" id="axis" aria-hidden="true"></div>
+    <div class="track">
+      <div class="lane" id="lane-req"></div>
+      <p class="track-label">A whole request: average time to first token, by caching policy</p>
+    </div>
+    <div class="cursor" id="cursor"><div class="readout" id="readout" aria-live="polite"></div></div>
+  </div>
+  <p class="hint">Both rows share one logarithmic time axis, from 10 microseconds to 10 seconds. Point at it, tap it, or focus it and use the arrow keys to see what fits in that much time.</p>
 
-  <section class="fig" aria-labelledby="h1f">
-    <h2 id="h1f">Time to first token, by caching policy</h2>
-    <p class="q">Average wait for the first word of a reply. The tick on each bar is the 95th percentile; the dashed line is the most reuse this traffic allows.</p>
-    <div class="plot" id="p-pol"></div>
-    <p class="take" id="take-pol"></p>
+  <section class="chapter" aria-labelledby="c1">
+    <div>
+      <h2 id="c1">How much came back decides how much faster</h2>
+      <p class="lead" id="c1lead"></p>
+      <p class="src">Requests grouped by the share of their prompt already cached, all-tier policy. Each arrow runs from recomputing to reusing, on a log time axis.</p>
+    </div>
+    <div class="fig"><div class="plot" id="bands"></div></div>
   </section>
 
-  <div class="two">
-    <section class="fig" aria-labelledby="h2f">
-      <h2 id="h2f">Where the reused context came from</h2>
-      <p class="q">Share of all prompt tokens, by the tier they were read from. The rest were computed.</p>
-      <div class="legend" id="tier-legend"></div>
-      <div class="plot" id="p-mix"></div>
-    </section>
-    <section class="fig" aria-labelledby="h3f">
-      <h2 id="h3f">The more reusable a request, the faster</h2>
-      <p class="q">Cut in time to first token versus recomputing, grouped by how much of each request's prompt was already cached (all-tiers policy).</p>
-      <div class="plot" id="p-band"></div>
-      <p class="take" id="take-band"></p>
-    </section>
-  </div>
-
-  <div class="two">
-    <section class="fig" aria-labelledby="h4f">
-      <h2 id="h4f">Is each tier worth reading from?</h2>
-      <p class="q">Time to bring one 512-token block of context back to the GPU, against the time to simply recompute it. A tier slower than recomputing never pays.</p>
-      <div class="plot" id="p-tier"></div>
-      <p class="take" id="take-tier"></p>
-    </section>
-    <section class="fig" aria-labelledby="h5f">
-      <h2 id="h5f">How fast the cache warms up</h2>
-      <p class="q">Share of prompt tokens served from cache, minute by minute through the hour of traffic.</p>
-      <div class="legend" id="warm-legend"></div>
-      <div class="plot" id="p-warm"></div>
-    </section>
-  </div>
-
-  <section class="fig" aria-labelledby="h6f">
-    <h2 id="h6f">Every cluster, every policy</h2>
-    <p class="q">Share of the possible reuse each policy captures on the selected workload, and what it costs the SSDs. Pick a row to see it above.</p>
-    <div class="tbl" id="t-matrix"></div>
+  <section class="chapter" aria-labelledby="c2">
+    <div>
+      <h2 id="c2">Within an hour, memory does most of the work</h2>
+      <p class="lead" id="c2lead"></p>
+      <p class="src">Bars are shares of all prompt tokens; the dashed line is the most this traffic could ever reuse. Blocks cached but slower to fetch than to recompute are outlined.</p>
+    </div>
+    <div class="fig">
+      <div class="legend" id="mixlegend"></div>
+      <div class="plot" id="mix"></div>
+    </div>
   </section>
 
-  <h3 class="sec">What the replay shows</h3>
-  <ol class="findings" id="findings"></ol>
+  <section class="chapter wide-fig" aria-labelledby="c3">
+    <div>
+      <h2 id="c3">Every cluster, every policy</h2>
+      <p class="lead">Share of the possible reuse each policy captured, and how hard caching pushes the SSDs, in drive-writes per day against the drives' rating. Select a row to put that cluster on the ruler.</p>
+    </div>
+    <div class="fig tbl" id="matrix"></div>
+  </section>
 
-  <footer id="foot"></footer>
+  <section class="chapter" aria-labelledby="c4">
+    <div>
+      <h2 id="c4">Where the claim holds, and where it doesn't</h2>
+      <p class="lead">Tested against Seagate's argument that offloading KV cache to SSD and hard drives, instead of regenerating it, makes inference faster and cheaper.</p>
+    </div>
+    <ol class="findings" id="findings"></ol>
+  </section>
+
+  <section class="chapter" id="method" aria-labelledby="c5">
+    <div>
+      <h2 id="c5">What is real, and what is assumed</h2>
+      <p class="lead">The traffic is real. The hardware is a model whose every number lives in a CSV you can change and re-run.</p>
+    </div>
+    <div class="facts" id="facts"></div>
+  </section>
+
+  <footer>
+    <span>Traces: <a href="https://github.com/kvcache-ai/Mooncake" target="_blank" rel="noopener">kvcache-ai/Mooncake</a> FAST'25 release, Apache-2.0</span>
+    <span>Python replay simulator · dbt on DuckDB and Snowflake · <a href="https://github.com/evannwilsonn/reprise" target="_blank" rel="noopener">github.com/evannwilsonn/reprise</a></span>
+  </footer>
 </div>
-<div class="tip" id="tip"></div>
 <script>
 (async () => {
 const D = window.RP_DATA || await (await fetch('data.json')).json();
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const pct = (v, d=0) => v == null ? '–' : (v*100).toFixed(d) + '%';
-const ms = v => v == null ? '–' : v >= 1000 ? (v/1000).toFixed(2) + ' s' : Math.round(v) + ' ms';
-const usd = v => v == null ? '–' : (v < 0 ? '−$' : '$') + Math.abs(v).toFixed(2);
-const tip = $('tip');
-function tipAt(el, html, x, y){ const r = el.getBoundingClientRect(); tip.innerHTML = html; tip.style.left = (r.left + x + scrollX) + 'px'; tip.style.top = (r.top + y + scrollY) + 'px'; tip.classList.add('on'); }
-const hide = () => tip.classList.remove('on');
+const pct = (v, d = 0) => v == null ? '–' : (v * 100).toFixed(d) + '%';
+const fmt = ms => ms == null ? '–' : ms < 1 ? (ms * 1000).toFixed(0) + ' µs' : ms < 10 ? ms.toFixed(1) + ' ms' : ms < 1000 ? Math.round(ms) + ' ms' : (ms / 1000).toFixed(2) + ' s';
 
-const TR_NAME = {conversation:'Chat', toolagent:'Tools & agents', synthetic:'Synthetic'};
-const TIERS = [['hbm','GPU memory','--t-hbm'],['dram','Server memory','--t-dram'],['ssd','SSD','--t-ssd'],['hdd','Hard drives','--t-hdd']];
+const WL = {toolagent: 'Tools & agents', conversation: 'Chat', synthetic: 'Synthetic multi-turn'};
+const TIER = {hbm: ['GPU memory', '--hbm'], dram: ['Server memory', '--dram'], ssd: ['NVMe SSD', '--ssd'], hdd: ['Hard drives', '--hdd']};
 const scen = Object.fromEntries(D.scenarios.map(s => [s.scenario_id, s]));
-const state = {sc: 'base', tr: 'toolagent'};
-try { const s = JSON.parse(localStorage.getItem('reprise') || '{}'); if (scen[s.sc]) state.sc = s.sc; if (TR_NAME[s.tr]) state.tr = s.tr; } catch (e) {}
-const save = () => { try { localStorage.setItem('reprise', JSON.stringify(state)); } catch (e) {} };
+const state = {wl: 'toolagent', sc: 'base'};
+try { const s = JSON.parse(localStorage.getItem('reprise.v2') || '{}'); if (WL[s.wl]) state.wl = s.wl; if (scen[s.sc]) state.sc = s.sc; } catch (e) {}
+const save = () => { try { localStorage.setItem('reprise.v2', JSON.stringify(state)); } catch (e) {} };
+const rows = () => D.comparison.filter(r => r.scenario_id === state.sc && r.trace === state.wl).sort((a, b) => a.policy_order - b.policy_order);
+const get = (sc, wl, p) => D.comparison.find(r => r.scenario_id === sc && r.trace === wl && r.policy_id === p);
+const band = (sc, wl, b) => D.bands.find(x => x.scenario_id === sc && x.trace === wl && x.policy_id === 'all_tiers' && x.cached_band === b);
+const narrow = () => innerWidth < 600;
 
-const reqTotal = D.traces.reduce((a, t) => a + t.requests, 0);
-$('lede').innerHTML = `Agentic AI keeps long conversations going, and each reply re-reads everything said before. A model can store that work (its KV cache) and reuse it, or throw it away and recompute it. Reprise replays <b>${reqTotal.toLocaleString()} real requests</b> from Mooncake's published production traces through a simulated cluster with four storage tiers and measures what each caching policy does to response time, GPU work, cost and SSD wear.`;
+// one log axis for the whole page: 10 µs to 10 s
+const LO = Math.log10(0.01), HI = Math.log10(10000);
+const pos = ms => (Math.log10(Math.max(ms, 0.01)) - LO) / (HI - LO) * 100;
+const msAt = p => Math.pow(10, LO + p / 100 * (HI - LO));
 
+$('wl').innerHTML = Object.entries(WL).map(([k, v]) => `<button type="button" data-wl="${k}">${v}</button>`).join('');
 $('sc').innerHTML = D.scenarios.map(s => `<option value="${s.scenario_id}">${esc(s.scenario_name)}</option>`).join('');
-$('tr').innerHTML = Object.entries(TR_NAME).map(([k, v]) => `<button type="button" data-tr="${k}">${v}</button>`).join('');
+$('wl').addEventListener('click', e => { const b = e.target.closest('[data-wl]'); if (b) { state.wl = b.dataset.wl; save(); render(); } });
 $('sc').addEventListener('change', e => { state.sc = e.target.value; save(); render(); });
-$('tr').addEventListener('click', e => { const b = e.target.closest('[data-tr]'); if (b) { state.tr = b.dataset.tr; save(); render(); } });
-$('tier-legend').innerHTML = TIERS.map(([k, n, c]) => `<span><i style="background:var(${c})"></i>${n}</span>`).join('') + `<span><i style="background:var(--t-recomp)"></i>Cached, but recomputed (faster)</span>`;
 
-function rows(){ return D.comparison.filter(r => r.scenario_id === state.sc && r.trace === state.tr).sort((a, b) => a.policy_order - b.policy_order); }
-
-function tiles(){
-  const R = rows(), base = R.find(r => r.policy_id === 'recompute');
-  const real = R.filter(r => !r.unlimited && r.policy_id !== 'recompute');
-  const best = real.slice().sort((a, b) => a.mean_ttft_ms - b.mean_ttft_ms)[0];
-  const at = R.find(r => r.policy_id === 'all_tiers'), ar = R.find(r => r.policy_id === 'all_tiers_reuse');
-  const wear = at.ssd_drive_writes_per_day, rated = at.ssd_rated_drive_writes_per_day;
-  const wearPill = wear == null ? '<span class="pill na">No SSD tier</span>' : wear > rated ? `<span class="pill bad">${(wear / rated).toFixed(1)}× the drives' rating</span>` : '<span class="pill ok">Within rating</span>';
-  $('tiles').innerHTML = [
-    ['Faster first token', pct(best.mean_ttft_reduction), `${esc(best.policy_name)}: ${ms(best.mean_ttft_ms)} vs ${ms(base.mean_ttft_ms)} recomputing`],
-    ['Reuse captured', pct(best.share_of_ceiling), `of the ${pct(best.ceiling_share)} of prompt tokens this traffic could ever reuse`],
-    ['GPU time saved', best.gpu_hours_saved_per_hour.toFixed(1) + ' GPU-h/h', `${usd(best.net_usd_saved_per_hour)} an hour after paying for the storage`],
-    ['SSD wear, cache everything', wear == null ? '–' : wear.toFixed(1) + ' DWPD', `${wearPill} <span style="display:block;margin-top:4px">Reuse-aware admission: ${ar.ssd_drive_writes_per_day == null ? '–' : ar.ssd_drive_writes_per_day.toFixed(1) + ' DWPD'}</span>`],
-  ].map(([l, v, d]) => `<div class="tile"><div class="lbl">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join('');
+{
+  let h = '';
+  const names = {'-2': '10 µs', '-1': '100 µs', '0': '1 ms', '1': '10 ms', '2': '100 ms', '3': '1 s', '4': '10 s'};
+  for (let e = -2; e <= 4; e++) {
+    const p = pos(Math.pow(10, e));
+    h += `<div class="tk major" style="left:${p}%"></div><div class="lab${e % 2 ? ' odd' : ''}" style="left:${p}%;${e === -2 ? 'transform:none' : e === 4 ? 'transform:translateX(-100%)' : ''}">${names[e]}</div>`;
+    if (e < 4) for (let m = 2; m <= 9; m++) h += `<div class="tk minor" style="left:${pos(m * Math.pow(10, e))}%"></div>`;
+  }
+  $('axis').innerHTML = h;
 }
 
-function polChart(){
-  const R = rows(), el = $('p-pol');
-  const W = 1100, rowH = 40, L = 230, Rr = 130, T = 6, H = T + R.length * rowH + 24;
-  const hi = Math.max(...R.map(r => r.p95_ttft_ms)) * 1.05;
-  const x = v => L + v / hi * (W - L - Rr);
-  const ceil = R.find(r => r.unlimited);
-  let g = '';
-  const step = hi > 3000 ? 1000 : hi > 1200 ? 500 : 200;
-  for (let v = 0; v <= hi; v += step) g += `<line class="gridl" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H - 22}"/><text class="ax" x="${x(v)}" y="${H - 6}" text-anchor="middle">${v >= 1000 ? (v/1000) + 's' : v + 'ms'}</text>`;
-  R.forEach((r, i) => {
-    const y = T + i * rowH + 8, h = rowH - 16;
-    g += `<text class="axl" x="${L - 12}" y="${y + h / 2 + 5}" text-anchor="end">${esc(r.policy_name)}</text>`;
-    g += `<rect x="${L}" y="${y}" width="${Math.max(2, x(r.mean_ttft_ms) - L)}" height="${h}" rx="3" fill="${r.unlimited ? 'var(--surface-2)' : r.policy_id === 'recompute' ? 'var(--t-recomp)' : 'var(--s1)'}" ${r.unlimited ? 'stroke="var(--line-2)" stroke-dasharray="4 3"' : ''} data-i="${i}"/>`;
-    g += `<line x1="${x(r.p95_ttft_ms)}" x2="${x(r.p95_ttft_ms)}" y1="${y - 3}" y2="${y + h + 3}" stroke="var(--text)" stroke-width="2"/>`;
-    g += `<text class="val" x="${x(r.mean_ttft_ms) + 8}" y="${y + h / 2 + 4}">${ms(r.mean_ttft_ms)}${r.policy_id !== 'recompute' ? ' · ' + pct(r.mean_ttft_reduction) + ' faster' : ''}</text>`;
-    g += `<text class="ax" x="${x(r.p95_ttft_ms) + 5}" y="${y + h / 2 + 4}">p95 ${ms(r.p95_ttft_ms)}</text>`;
+function tierRows() {
+  const s = scen[state.sc];
+  return D.tiers.filter(t => t.model_id === s.model_id).map(t => ({...t, fetch: t.tier === 'hdd' ? t.access_latency_ms + t.block_gb / (t.read_gb_s_per_node * (s.hdd_read_scale || 1)) * 1000 : t.fetch_ms}));
+}
+
+// each item gets its own row; the label sits beside its dot, on whichever side has room
+function rowHTML(p, label, sub, cls, color) {
+  const right = p > (narrow() ? 40 : 62);
+  const tag = right ? `right:calc(${100 - p}% + 12px)` : `left:calc(${p}% + 12px)`;
+  return `<div class="lrow ${cls}" style="--c:var(${color})"><span class="dot" style="left:${p}%"></span><span class="tag" style="${tag}">${label}<small>${sub}</small></span></div>`;
+}
+
+function laneBlock() {
+  const T = tierRows(), rc0 = T[0].recompute_ms_at_start, rc12 = T[0].recompute_ms_at_12k;
+  let h = `<div class="band" style="left:${pos(rc0)}%;width:${Math.max(0.6, pos(rc12) - pos(rc0))}%"><span class="band-lab" style="left:50%">recompute ${fmt(rc0)}–${fmt(rc12)}</span></div>`;
+  h += T.map(t => { const slow = t.fetch > rc0, [name, c] = TIER[t.tier];
+    return rowHTML(pos(t.fetch), name, fmt(t.fetch) + (slow ? ' · slower than recomputing' : ''), slow ? 'slow' : '', c); }).join('');
+  $('lane-block').innerHTML = h;
+}
+
+function laneReq() {
+  const R = rows();
+  $('lane-req').innerHTML = R.map(r => {
+    const rc = r.policy_id === 'recompute', ghost = r.unlimited;
+    const sub = fmt(r.mean_ttft_ms) + (rc ? '' : ' · ' + pct(r.mean_ttft_reduction) + ' faster') + (ghost ? ' · the limit' : '');
+    return rowHTML(pos(r.mean_ttft_ms), esc(r.policy_name.replace(' (unlimited GPU memory)', '')), sub, (rc ? 'rc ' : '') + (ghost ? 'ghost' : ''), rc ? '--amber' : ghost ? '--ink-3' : '--mark');
+  }).join('');
+}
+
+// signature: a cursor that reads out what fits in a given amount of time (pointer, touch or keys)
+{
+  const ruler = $('ruler'), cur = $('cursor'), out = $('readout');
+  let p = pos(20), pinned = false;
+  const show = () => {
+    const ms = msAt(p), T = tierRows(), rc = T[0].recompute_ms_at_start;
+    const fits = T.filter(t => t.fetch <= ms).map(t => TIER[t.tier][0]);
+    const reqs = rows().filter(q => q.mean_ttft_ms <= ms && !q.unlimited).length;
+    cur.style.left = p + '%';
+    out.innerHTML = `<b>${fmt(ms)}</b><br>${fits.length ? `Enough to fetch a block from ${fits.join(', ')}.` : '<span class="n">Shorter than any tier can deliver a block.</span>'} ${ms >= rc ? 'Enough to recompute one.' : `<span class="n">Too short to recompute one (${fmt(rc)}).</span>`}${reqs ? ` ${reqs} polic${reqs > 1 ? 'ies answer' : 'y answers'} the average request within it.` : ''}`;
+    // keep the readout inside the ruler
+    out.style.top = ($('axis').offsetTop + 44) + 'px';
+    const rw = ruler.clientWidth, ow = out.offsetWidth, x = p / 100 * rw;
+    out.style.left = (Math.min(rw - ow, Math.max(0, x - ow / 2)) - x) + 'px';
+    ruler.setAttribute('aria-valuenow', ms.toFixed(3)); ruler.setAttribute('aria-valuetext', fmt(ms));
+    cur.classList.add('on');
+  };
+  const at = x => { const r = ruler.getBoundingClientRect(); p = Math.min(100, Math.max(0, (x - r.left) / r.width * 100)); show(); };
+  ruler.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') at(e.clientX); });
+  ruler.addEventListener('pointerdown', e => { at(e.clientX); pinned = e.pointerType !== 'mouse'; });
+  ruler.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !pinned) cur.classList.remove('on'); });
+  document.addEventListener('pointerdown', e => { if (!ruler.contains(e.target)) { pinned = false; cur.classList.remove('on'); } });
+  ruler.addEventListener('focus', show);
+  ruler.addEventListener('blur', () => { if (!pinned) cur.classList.remove('on'); });
+  ruler.addEventListener('keydown', e => {
+    const step = 100 / 60;  // a tenth of a decade
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') p = Math.min(100, p + step);
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') p = Math.max(0, p - step);
+    else if (e.key === 'Home') p = 0; else if (e.key === 'End') p = 100; else return;
+    e.preventDefault(); show();
   });
-  g += `<line x1="${x(ceil.mean_ttft_ms)}" x2="${x(ceil.mean_ttft_ms)}" y1="${T}" y2="${H - 22}" stroke="var(--text-3)" stroke-dasharray="4 4"/>`;
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mean and 95th percentile time to first token for each policy">${g}</svg>`;
-  const svg = el.querySelector('svg');
-  svg.querySelectorAll('rect[data-i]').forEach(b => { b.addEventListener('mousemove', e => { const r = R[+b.dataset.i], bb = svg.getBoundingClientRect(); tipAt(svg, `<b>${esc(r.policy_name)}</b><br>mean ${ms(r.mean_ttft_ms)} · median ${ms(r.p50_ttft_ms)} · p95 ${ms(r.p95_ttft_ms)}<br>${pct(r.cached_share, 1)} of prompt tokens reused`, e.clientX - bb.left, e.clientY - bb.top); }); b.addEventListener('mouseleave', hide); });
-  const gd = R.find(r => r.policy_id === 'gpu_dram'), at = R.find(r => r.policy_id === 'all_tiers'), go = R.find(r => r.policy_id === 'gpu_only');
-  $('take-pol').innerHTML = `GPU memory alone captures <b>${pct(go.share_of_ceiling)}</b> of the possible reuse. Adding server memory takes it to <b>${pct(gd.share_of_ceiling)}</b>, and SSD plus hard drives to <b>${pct(at.share_of_ceiling)}</b>.`;
 }
 
-function mixChart(){
-  const R = rows().filter(r => r.policy_id !== 'recompute'), el = $('p-mix');
-  const W = 560, rowH = 34, L = 170, Rr = 50, T = 4, H = T + R.length * rowH + 22;
-  const tr = D.traces.find(t => t.trace === state.tr), x = v => L + v * (W - L - Rr);
-  let g = '';
-  [0, .25, .5, .75, 1].forEach(v => g += `<line class="gridl" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H - 20}"/><text class="ax" x="${x(v)}" y="${H - 4}" text-anchor="middle">${v * 100}%</text>`);
-  R.forEach((r, i) => {
-    const y = T + i * rowH + 7, h = rowH - 14;
-    g += `<text class="axl" x="${L - 10}" y="${y + h / 2 + 5}" text-anchor="end">${esc(r.policy_name.replace(' (unlimited GPU memory)', ''))}</text>`;
-    // tokens per tier = hits * ~512 tokens / input tokens (blocks are 512 tokens except a prompt's last)
-    let x0 = 0;
-    const segs = TIERS.map(([k, , c]) => [k, c, r['hits_' + k] * 512 / tr.input_tokens]).concat([['recomputed', '--t-recomp', r.hits_recomputed_instead * 512 / tr.input_tokens]]);
-    const scale = r.cached_share / Math.max(1e-9, segs.slice(0, 4).reduce((a, s) => a + s[2], 0));
-    segs.forEach(([k, c, v], j) => { const w = (j < 4 ? v * scale : v); if (w <= 0) return; g += `<rect x="${x(x0) + (x0 > 0 ? 1 : 0)}" y="${y}" width="${Math.max(1, x(x0 + w) - x(x0) - (x0 > 0 ? 1 : 0))}" height="${h}" rx="2" fill="var(${c})"><title>${k}: ${pct(w, 1)} of prompt tokens</title></rect>`; x0 += w; });
-    g += `<text class="val" x="${x(x0) + 6}" y="${y + h / 2 + 4}">${pct(r.cached_share)}</text>`;
-  });
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Reused prompt tokens by tier for each policy">${g}</svg>`;
+function answer() {
+  const b = band(state.sc, state.wl, '90-100%') || band('base', state.wl, '90-100%');
+  const all = get(state.sc, state.wl, 'all_tiers'), rc = get(state.sc, state.wl, 'recompute');
+  const T = tierRows(), hdd = T.find(t => t.tier === 'hdd'), slowHdd = hdd.fetch > T[0].recompute_ms_at_start;
+  $('answer').innerHTML = `Store it, mostly in memory. Replaying ${D.traces.reduce((a, t) => a + t.requests, 0).toLocaleString()} real requests from Mooncake's production traces, prompts that were almost fully cached got their first token <b>${pct(b.ttft_reduction)} faster</b>. Across all ${WL[state.wl].toLowerCase()} traffic the gain is <b>${pct(all.mean_ttft_reduction)}</b>, ${fmt(rc.mean_ttft_ms)} down to ${fmt(all.mean_ttft_ms)}. ${slowHdd ? 'Hard drives at this bandwidth are slower than recomputing, so they barely help.' : 'With this much drive bandwidth, even hard drives beat recomputing.'}`;
+  const hw = Object.fromEntries(D.hardware.map(h => [h.item, h.value]));
+  $('scnote').textContent = state.sc === 'base' ? `${hw.nodes} nodes of ${hw.gpus_per_node} H100s, each tier at the size in seeds/tiers.csv.` : scen[state.sc].description;
 }
 
-function bandChart(){
-  const B = D.bands.filter(b => b.scenario_id === state.sc && b.trace === state.tr && b.policy_id === 'all_tiers' && b.cached_band !== '0%').sort((a, b) => a.band_floor - b.band_floor);
-  const el = $('p-band'); const W = 560, H = 230, L = 40, R = 10, T = 18, Bm = 40;
-  const bw = (W - L - R) / Math.max(1, B.length), y = v => T + (1 - v) * (H - T - Bm);
+function bandsChart() {
+  const order = ['1-25%', '25-50%', '50-75%', '75-90%', '90-100%'];
+  const B = order.map(o => band(state.sc, state.wl, o)).filter(b => b && b.requests >= 20);
+  const W = Math.max(320, $('bands').clientWidth || 760), nar = W < 500, L = nar ? 8 : 110, R = 48, rowH = nar ? 62 : 52, T = nar ? 18 : 10, H = T + B.length * rowH + 30;
+  const lo = Math.log10(10), hi = Math.log10(5000), x = ms => L + (Math.log10(ms) - lo) / (hi - lo) * (W - L - R);
   let g = '';
-  [0, .25, .5, .75, 1].forEach(v => g += `<line class="gridl" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v * 100}%</text>`);
+  [10, 100, 1000].forEach(v => g += `<line class="gl" x1="${x(v)}" x2="${x(v)}" y1="${T - 4}" y2="${H - 26}"/><text class="ax" x="${x(v)}" y="${H - 8}" text-anchor="middle">${v >= 1000 ? v / 1000 + ' s' : v + ' ms'}</text>`);
+  [20, 30, 50, 200, 300, 500, 2000, 3000].forEach(v => g += `<line class="gl" x1="${x(v)}" x2="${x(v)}" y1="${T - 4}" y2="${H - 26}" stroke-dasharray="2 4"/>`);
   B.forEach((b, i) => {
-    const xx = L + i * bw + 8, w = bw - 16;
-    g += `<rect x="${xx}" y="${y(Math.max(0, b.ttft_reduction))}" width="${w}" height="${y(0) - y(Math.max(0, b.ttft_reduction))}" rx="3" fill="var(--s1)"><title>${b.requests.toLocaleString()} requests: ${ms(b.mean_ttft_ms)} vs ${ms(b.mean_recompute_ttft_ms)} recomputing</title></rect>`;
-    g += `<text class="val" x="${xx + w / 2}" y="${y(Math.max(0, b.ttft_reduction)) - 5}" text-anchor="middle">${pct(b.ttft_reduction)}</text>`;
-    g += `<text class="ax" x="${xx + w / 2}" y="${H - 22}" text-anchor="middle">${b.cached_band}</text><text class="ax" x="${xx + w / 2}" y="${H - 8}" text-anchor="middle">${b.requests.toLocaleString()} req</text>`;
+    const y = T + i * rowH + rowH / 2, a = x(b.mean_recompute_ttft_ms), c = x(b.mean_ttft_ms);
+    g += nar ? `<text class="lbl" x="0" y="${y - 16}">${b.cached_band} cached <tspan class="ax">${b.requests.toLocaleString()} req</tspan></text>` : `<text class="lbl" x="0" y="${y - 3}">${b.cached_band} cached</text><text class="ax" x="0" y="${y + 14}">${b.requests.toLocaleString()} req</text>`;
+    if (a - c > 16) g += `<line x1="${a - 8}" x2="${c + 10}" y1="${y}" y2="${y}" stroke="var(--ink-2)" stroke-width="2"/><path d="M${c + 16},${y - 5} L${c + 10},${y} L${c + 16},${y + 5}" fill="none" stroke="var(--ink-2)" stroke-width="2"/>`;
+    g += `<circle cx="${a}" cy="${y}" r="7" fill="var(--amber)" stroke="var(--bg)" stroke-width="3"><title>Recomputing: ${fmt(b.mean_recompute_ttft_ms)}</title></circle><circle cx="${c}" cy="${y}" r="7" fill="var(--dram)" stroke="var(--bg)" stroke-width="3"><title>Reusing: ${fmt(b.mean_ttft_ms)}</title></circle>`;
+    g += `<text class="num" x="${Math.max(a, c) + 14}" y="${y + 4}">${pct(b.ttft_reduction)}</text>`;
   });
-  el.innerHTML = B.length ? `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Reduction in time to first token by cached share">${g}</svg>` : '<p class="q">No cached requests in this view.</p>';
-  const top = B.find(b => b.cached_band === '90-100%');
-  $('take-band').innerHTML = top ? `Requests that were almost fully cached got their first token <b>${pct(top.ttft_reduction)} faster</b> (${ms(top.mean_ttft_ms)} instead of ${ms(top.mean_recompute_ttft_ms)}). That is the like-for-like version of the "95% faster than regenerating" figure Seagate reports; across all traffic the gain is smaller because many prompts are new.` : '';
+  $('bands').innerHTML = B.length ? `<div class="legend"><span><i style="background:var(--amber)"></i>Recompute everything</span><span><i style="background:var(--dram)"></i>Reuse from all tiers</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Time to first token, recomputing versus reusing, by cached share">${g}</svg>` : '<p class="lead">No reusable requests in this view.</p>';
+  const top = band(state.sc, state.wl, '90-100%');
+  const verdict = !top ? '' : top.ttft_reduction >= 0.9 ? 'and it holds' : top.ttft_reduction >= 0.75 ? 'and it comes close' : 'and here it falls short';
+  $('c1lead').innerHTML = top ? `When 90–100% of a prompt was already stored, the first token arrived in <b>${fmt(top.mean_ttft_ms)} instead of ${fmt(top.mean_recompute_ttft_ms)}</b>, ${pct(top.ttft_reduction)} faster. That is the like-for-like test of the “95% faster than regenerating” claim, ${verdict}. Requests with little reusable context gain almost nothing.` : '';
 }
 
-function tierChart(){
-  const model = scen[state.sc].model_id, T_ = D.tiers.filter(t => t.model_id === model && t.tier !== 'hbm');
-  const scale = scen[state.sc].hdd_read_scale || 1;
-  const rows = T_.map(t => ({...t, fetch: t.tier === 'hdd' ? t.access_latency_ms + t.block_gb / (t.read_gb_s_per_node * scale) * 1000 : t.fetch_ms}));
-  const rc = rows[0].recompute_ms_at_start, rc12 = rows[0].recompute_ms_at_12k;
-  const el = $('p-tier'); const W = 560, rowH = 44, L = 118, R = 70, T = 8, H = T + rows.length * rowH + 30;
-  const hi = Math.max(rc12, ...rows.map(r => r.fetch)) * 1.1, x = v => L + v / hi * (W - L - R);
+function mixChart() {
+  const tr = D.traces.find(t => t.trace === state.wl), R = rows().filter(r => r.policy_id !== 'recompute');
+  const ceil = R.find(r => r.unlimited)?.cached_share;
+  const W = Math.max(320, $('mix').clientWidth || 760), L = W < 500 ? 132 : 200, Rr = 48, rowH = 40, T = 22, H = T + R.length * rowH + 26;
+  const x = v => L + v * (W - L - Rr);
   let g = '';
-  for (let v = 0; v <= hi; v += 10) g += `<line class="gridl" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H - 26}"/><text class="ax" x="${x(v)}" y="${H - 10}" text-anchor="middle">${v}ms</text>`;
-  g += `<rect x="${x(rc)}" y="${T}" width="${x(rc12) - x(rc)}" height="${H - 26 - T}" fill="var(--warn-bg)"/><text class="ax" x="${x(rc12) + 4}" y="${T + 10}">recompute</text><text class="ax" x="${x(rc12) + 4}" y="${T + 23}">${rc.toFixed(0)}–${rc12.toFixed(0)} ms</text>`;
-  rows.forEach((r, i) => {
-    const y = T + i * rowH + 10, h = rowH - 20, ok = r.fetch < rc;
-    g += `<text class="axl" x="${L - 10}" y="${y + h / 2 + 5}" text-anchor="end">${{dram: 'Server memory', ssd: 'NVMe SSD', hdd: 'Hard drives'}[r.tier]}</text>`;
-    g += `<rect x="${L}" y="${y}" width="${Math.max(2, x(r.fetch) - L)}" height="${h}" rx="3" fill="var(--t-${r.tier})"/>`;
-    g += `<text class="val" x="${x(r.fetch) + 6}" y="${y + h / 2 + 4}">${r.fetch < 1 ? r.fetch.toFixed(2) : r.fetch.toFixed(1)} ms ${ok ? '' : '✕'}</text>`;
+  [0, .25, .5, .75, 1].forEach(v => g += `<line class="gl" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H - 22}"/><text class="ax" x="${x(v)}" y="${H - 6}" text-anchor="middle">${v * 100}%</text>`);
+  R.forEach((r, i) => {
+    const y = T + i * rowH + 9, h = rowH - 18;
+    g += `<text class="lbl2" x="${L - 12}" y="${y + h / 2 + 5}" text-anchor="end">${esc(r.policy_name.replace(' (unlimited GPU memory)', '').replace('All tiers + reuse-aware', 'Reuse-aware'))}</text>`;
+    const raw = ['hbm', 'dram', 'ssd', 'hdd'].map(k => r['hits_' + k] * 512 / tr.input_tokens), sum = raw.reduce((a, b) => a + b, 0) || 1;
+    let x0 = 0;
+    ['hbm', 'dram', 'ssd', 'hdd'].forEach((k, j) => { const w = raw[j] / sum * r.cached_share; if (w <= 0.0005) return; g += `<rect x="${x(x0) + (x0 ? 1 : 0)}" y="${y}" width="${Math.max(1, x(x0 + w) - x(x0) - (x0 ? 1 : 0))}" height="${h}" rx="2" fill="var(${TIER[k][1]})"><title>${TIER[k][0]}: ${pct(w, 1)} of prompt tokens</title></rect>`; x0 += w; });
+    const rec = r.hits_recomputed_instead * 512 / tr.input_tokens;
+    if (rec > 0.0005) g += `<rect x="${x(x0) + 1.5}" y="${y + .75}" width="${Math.max(1, x(x0 + rec) - x(x0) - 2)}" height="${h - 1.5}" rx="2" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="3 2"><title>Cached but faster to recompute: ${pct(rec, 1)}</title></rect>`;
+    const ceilX = ceil ? x(ceil) : -99, vx = x(x0 + rec) + 8, nearCeil = vx < ceilX + 6 && vx + 34 > ceilX;
+    g += `<text class="num" x="${nearCeil ? ceilX + 8 : vx}" y="${y + h / 2 + 4}">${pct(r.cached_share)}</text>`;
   });
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Fetch time per block by tier versus recompute time">${g}</svg>`;
-  const hdd = rows.find(r => r.tier === 'hdd');
-  $('take-tier').innerHTML = `One block of context is <b>${(rows[0].block_gb * 1000).toFixed(0)} MB</b> for this model. ${hdd.fetch > rc ? `At ${(hdd.read_gb_s_per_node * scale).toFixed(0)} GB/s per node, the hard-drive pool takes <b>${hdd.fetch.toFixed(0)} ms</b> per block, slower than recomputing, so the simulator recomputes instead of reading it.` : `With ${(hdd.read_gb_s_per_node * scale).toFixed(0)} GB/s per node the hard-drive pool fetches a block in <b>${hdd.fetch.toFixed(0)} ms</b>, fast enough to beat recomputing.`} Bandwidth, not capacity, decides whether a tier helps.`;
+  if (ceil) g += `<line x1="${x(ceil)}" x2="${x(ceil)}" y1="${T - 14}" y2="${H - 22}" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="4 3"/><text class="ax" x="${x(ceil) - 5}" y="${T - 4}" text-anchor="end">most reuse possible ${pct(ceil)}</text>`;
+  $('mix').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Share of prompt tokens served from each tier, by policy">${g}</svg>`;
+  $('mixlegend').innerHTML = Object.values(TIER).map(([n, c]) => `<span><i style="background:var(${c})"></i>${n}</span>`).join('') + '<span><i style="border:1.5px dashed var(--amber)"></i>Cached, but faster to recompute</span>';
+  const gd = get(state.sc, state.wl, 'gpu_dram'), go = get(state.sc, state.wl, 'gpu_only'), at = get(state.sc, state.wl, 'all_tiers');
+  const more = at.share_of_ceiling - gd.share_of_ceiling > 0.005 ? `; SSD and hard drives take it to <b>${pct(at.share_of_ceiling)}</b>` : ', and SSD and hard drives add nothing more';
+  $('c2lead').innerHTML = `On this cluster, GPU memory alone captures <b>${pct(go.share_of_ceiling)}</b> of the reuse this traffic allows (the dashed line). Adding server memory reaches <b>${pct(gd.share_of_ceiling)}</b>${more}. The traces cover one hour, so context that returns days later, the case the storage argument leans on, isn't in them.`;
 }
 
-function warmChart(){
-  const pols = [['gpu_only', 'GPU memory only', 'var(--s1)'], ['gpu_dram', 'GPU + server memory', 'var(--s2)'], ['all_tiers', 'All four tiers', 'var(--s3)']];
-  const sc = ['base', 'memory_pressure'].includes(state.sc) ? state.sc : 'base';
-  $('warm-legend').innerHTML = pols.map(([, n, c]) => `<span><i class="ln" style="background:${c}"></i>${n}</span>`).join('') + (sc !== state.sc ? '<span>(reference cluster)</span>' : '');
-  const el = $('p-warm'); const W = 560, H = 230, L = 40, R = 10, T = 10, B = 26;
-  const data = pols.map(([p]) => D.warmup.filter(w => w.scenario_id === sc && w.trace === state.tr && w.policy_id === p));
-  const maxM = Math.max(1, ...data.flat().map(w => w.minute));
-  const x = m => L + m / maxM * (W - L - R), y = v => T + (1 - v) * (H - T - B);
-  let g = '';
-  [0, .25, .5, .75, 1].forEach(v => g += `<line class="gridl" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v * 100}%</text>`);
-  for (let m = 0; m <= maxM; m += maxM > 30 ? 10 : 5) g += `<text class="ax" x="${x(m)}" y="${H - 8}" text-anchor="middle">${m} min</text>`;
-  data.forEach((d, j) => g += `<path d="${d.map((w, i) => `${i ? 'L' : 'M'}${x(w.minute).toFixed(1)},${y(w.cached_share).toFixed(1)}`).join('')}" fill="none" stroke="${pols[j][2]}" stroke-width="2"/>`);
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cached share of prompt tokens per minute">${g}</svg>`;
+function matrix() {
+  const P = D.policies.filter(p => p.policy_id !== 'recompute' && !p.unlimited);
+  const short = {gpu_only: 'GPU only', gpu_dram: '+ Server mem', all_tiers: 'All tiers', all_tiers_reuse: 'Reuse-aware'};
+  const head = `<tr><th>Cluster</th>${P.map(p => `<th class="${p.policy_id === 'all_tiers' ? '' : 'wide'}">${short[p.policy_id]}</th>`).join('')}<th>SSD wear</th><th class="wide">Reuse-aware wear</th></tr>`;
+  const body = D.scenarios.map(s => {
+    const by = Object.fromEntries(D.comparison.filter(r => r.scenario_id === s.scenario_id && r.trace === state.wl).map(r => [r.policy_id, r]));
+    const rated = by.all_tiers?.ssd_rated_drive_writes_per_day || 1;
+    const wear = (v, cls = '') => v == null ? `<td class="m ${cls}">–</td>` : `<td class="${cls}"><span class="flag ${v > rated ? 'over' : 'ok'}">${v.toFixed(1)}</span></td>`;
+    return `<tr tabindex="0" data-sc="${s.scenario_id}" class="${s.scenario_id === state.sc ? 'cur' : ''}" aria-current="${s.scenario_id === state.sc}"><td>${esc(s.scenario_name)}</td>${P.map(p => `<td class="m ${p.policy_id === 'all_tiers' ? '' : 'wide'}">${pct(by[p.policy_id]?.share_of_ceiling)}</td>`).join('')}${wear(by.all_tiers?.ssd_drive_writes_per_day)}${wear(by.all_tiers_reuse?.ssd_drive_writes_per_day, 'wide')}</tr>`;
+  }).join('');
+  $('matrix').innerHTML = `<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
+  $('matrix').querySelectorAll('tr[data-sc]').forEach(tr => { const go = () => { state.sc = tr.dataset.sc; save(); render(); $('ruler').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'}); }; tr.addEventListener('click', go); tr.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } }); });
 }
 
-function matrix(){
-  const pols = D.policies.filter(p => p.policy_id !== 'recompute' && !p.unlimited);
-  const by = {}; D.comparison.filter(r => r.trace === state.tr).forEach(r => (by[r.scenario_id] ||= {})[r.policy_id] = r);
-  const cell = r => { const v = r?.share_of_ceiling; if (v == null) return '<td>–</td>'; const a = Math.max(0.06, v * 0.55); return `<td class="heat" style="background:color-mix(in srgb, var(--s1) ${Math.round(a * 100)}%, transparent)">${pct(v)}</td>`; };
-  $('t-matrix').innerHTML = `<table><thead><tr><th>Cluster</th>${pols.map(p => `<th>${esc(p.policy_name)}</th>`).join('')}<th>SSD wear, all tiers</th><th>…reuse-aware</th></tr></thead><tbody>${D.scenarios.map(s => { const r = by[s.scenario_id] || {}; const w = r.all_tiers?.ssd_drive_writes_per_day, w2 = r.all_tiers_reuse?.ssd_drive_writes_per_day, rated = r.all_tiers?.ssd_rated_drive_writes_per_day || 1;
-    const wt = v => v == null ? '<td>–</td>' : `<td><span class="pill ${v > rated ? 'bad' : 'ok'}">${v.toFixed(1)} DWPD</span></td>`;
-    return `<tr tabindex="0" data-sc="${s.scenario_id}" style="cursor:pointer${s.scenario_id === state.sc ? ';box-shadow:inset 3px 0 0 var(--text)' : ''}"><td>${esc(s.scenario_name)}</td>${pols.map(p => cell(r[p.policy_id])).join('')}${wt(w)}${wt(w2)}</tr>`; }).join('')}</tbody></table>`;
-  $('t-matrix').querySelectorAll('tr[data-sc]').forEach(tr => { const go = () => { state.sc = tr.dataset.sc; save(); render(); scrollTo({top: 0, behavior: 'smooth'}); }; tr.addEventListener('click', go); tr.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); });
+function findings() {
+  const bc = band('base', 'conversation', '90-100%'), bt = band('base', 'toolagent', '90-100%');
+  const ca = get('base', 'conversation', 'all_tiers'), ta = get('base', 'toolagent', 'all_tiers'), sa = get('base', 'synthetic', 'all_tiers');
+  const gd = get('base', 'conversation', 'gpu_dram'), mp = get('memory_pressure', 'conversation', 'gpu_dram'), mpa = get('memory_pressure', 'conversation', 'all_tiers');
+  const nf = get('no_flash', 'conversation', 'all_tiers'), nw = get('no_flash_wide_hdd', 'conversation', 'all_tiers');
+  const at = get('base', 'conversation', 'all_tiers'), ar = get('base', 'conversation', 'all_tiers_reuse');
+  const hdd = D.tiers.find(t => t.tier === 'hdd' && t.model_id === 'llama31_70b_fp16');
+  const F = [
+    ['holds', `<b>Reused context is about 95% faster.</b> Prompts that were almost fully cached got their first token ${pct(bc.ttft_reduction)} (chat) to ${pct(bt.ttft_reduction)} (tools and agents) faster than recomputing them.`],
+    ['limits', `<b>Across all traffic the gain is smaller.</b> Average time to first token fell ${pct(ca.mean_ttft_reduction)} for chat, ${pct(ta.mean_ttft_reduction)} for tool and agent traffic and ${pct(sa.mean_ttft_reduction)} for the synthetic set, because many prompts are new.`],
+    ['limits', `<b>Memory, not disk, does most of it within an hour.</b> GPU plus server memory captured ${pct(gd.share_of_ceiling)} of the possible reuse on chat traffic. Multi-day context is outside what one hour of traces can test.`],
+    ['holds', `<b>When memory is scarce, SSD earns its place.</b> Under memory pressure, memory alone captured ${pct(mp.share_of_ceiling)} of the possible reuse; adding SSD and hard drives recovered ${pct(mpa.share_of_ceiling)}.`],
+    ['fails', `<b>Hard drives need bandwidth, not just capacity.</b> At ${hdd.read_gb_s_per_node} GB/s per node, fetching a ${Math.round(hdd.block_gb * 1000)} MB block takes about ${fmt(hdd.fetch_ms)}, longer than recomputing it, so a drive-only tier captured ${pct(nf.share_of_ceiling)}. ${scen.no_flash_wide_hdd.hdd_read_scale} times the drive bandwidth lifted that to ${pct(nw.share_of_ceiling)}.`],
+    ['fails', `<b>Caching everything wears out the SSDs.</b> Writing every evicted block came to ${at.ssd_drive_writes_per_day.toFixed(1)} drive-writes per day against a rating of ${at.ssd_rated_drive_writes_per_day}. Writing only blocks already reused once cut it to ${ar.ssd_drive_writes_per_day.toFixed(1)} and kept ${pct(ar.share_of_ceiling)} of the benefit.`],
+  ];
+  const word = {holds: 'Holds', limits: 'With limits', fails: 'Doesn’t hold'};
+  $('findings').innerHTML = F.map(([v, t]) => `<li><span class="v ${v}">${word[v]}</span>${t}</li>`).join('');
 }
 
-function findings(){
-  const g = (sc, tr, p) => D.comparison.find(r => r.scenario_id === sc && r.trace === tr && r.policy_id === p);
-  const band = (tr) => D.bands.find(b => b.scenario_id === 'base' && b.trace === tr && b.policy_id === 'all_tiers' && b.cached_band === '90-100%');
-  const bt = band('toolagent'), bc = band('conversation');
-  const mp = g('memory_pressure', 'conversation', 'gpu_dram'), mpa = g('memory_pressure', 'conversation', 'all_tiers');
-  const nf = g('no_flash', 'conversation', 'all_tiers'), nw = g('no_flash_wide_hdd', 'conversation', 'all_tiers');
-  const at = g('base', 'conversation', 'all_tiers'), ar = g('base', 'conversation', 'all_tiers_reuse');
-  const gd = g('base', 'conversation', 'gpu_dram'), ta = g('base', 'toolagent', 'all_tiers'), ca = g('base', 'conversation', 'all_tiers');
-  $('findings').innerHTML = [
-    `<b>The article's headline holds for reusable requests.</b> When nearly all of a prompt was cached, the first token came ${pct(bc.ttft_reduction)} (chat) to ${pct(bt.ttft_reduction)} (tools and agents) faster than recomputing it.`,
-    `<b>Across all traffic the gain is real but smaller.</b> Caching cut average time to first token by ${pct(ca.mean_ttft_reduction)} for chat and ${pct(ta.mean_ttft_reduction)} for tool and agent traffic, where more context repeats from step to step.`,
-    `<b>With ordinary memory, flash and disk add little within an hour.</b> On the reference cluster, GPU plus server memory already captures ${pct(gd.share_of_ceiling)} of the possible reuse in the chat trace. The traces cover one hour, so they cannot show context that comes back after days, which is where the article argues capacity tiers matter most.`,
-    `<b>When memory is scarce, the SSD tier is what saves it.</b> With memory shared across other work, memory alone captures ${pct(mp.share_of_ceiling)} of the possible reuse; adding the lower tiers recovers ${pct(mpa.share_of_ceiling)}.`,
-    `<b>Hard drives help only with enough bandwidth.</b> With no SSD, a ${(D.tiers.find(t => t.tier === 'hdd' && t.model_id === 'llama31_70b_fp16').read_gb_s_per_node)} GB/s-per-node drive pool captures ${pct(nf.share_of_ceiling)} of the reuse because most blocks are faster to recompute than to read. Striping across four times as many drives lifts that to ${pct(nw.share_of_ceiling)}.`,
-    `<b>Caching everything on flash wears it out.</b> Writing every evicted block to SSD comes to ${at.ssd_drive_writes_per_day.toFixed(1)} drive-writes per day against a rating of ${at.ssd_rated_drive_writes_per_day}. Only writing blocks that have already been reused brings that to ${ar.ssd_drive_writes_per_day.toFixed(1)} while keeping ${pct(ar.share_of_ceiling)} of the benefit.`,
-  ].map(s => `<li>${s}</li>`).join('');
+function facts() {
+  const hw = Object.fromEntries(D.hardware.map(h => [h.item, h.value]));
+  const tr = D.traces, n = k => tr.find(t => t.trace === k).requests.toLocaleString();
+  const f = [
+    ['The requests', `${tr.reduce((a, t) => a + t.requests, 0).toLocaleString()} requests from Mooncake's FAST'25 trace release: one hour of chat (${n('conversation')}), one hour of tool and agent traffic (${n('toolagent')}) and a synthetic multi-turn set (${n('synthetic')}). Each has its arrival time, token counts and hashes of every 512-token prefix block. No prompt text.`],
+    ['The cluster', `${hw.nodes} nodes of ${hw.gpus_per_node} H100 GPUs serving Llama 3.1 70B at ${pct(hw.prefill_mfu)} utilisation. Mooncake's own model and hardware aren't public, so this is a stated stand-in. Each tier's size, bandwidth, latency and price sits in <code>seeds/tiers.csv</code> with its source.`],
+    ['The rules', 'A request reuses only its longest cached prefix, because each block depends on everything before it. A cached block is loaded only when that is faster than recomputing it. Tiers evict least-recently-used blocks downward.'],
+    ['What it leaves out', `Queueing, decoding, contention between requests and overlapping loads with compute. Absolute times are indicative; the comparisons between policies are the point. Storage is costed at purchase price over ${D.meta.amortisation_months} months, GPU time at $${hw.gpu_hour_cost} an hour.`],
+    ['How it is checked', `${D.meta.dbt_tests} dbt data tests on DuckDB and Snowflake, including token conservation, every request replayed once in order, no policy beating the ceiling, and an independent SQL check of the simulator’s FLOPs maths. The Snowflake results match DuckDB exactly. Unit tests cover the tier cache itself.`],
+    ['Reproduce it', `<code>make all</code> downloads the traces, checks them against the published counts, runs ${D.comparison.length} simulations and the tests, and rebuilds this page in about two minutes.`],
+  ];
+  $('facts').innerHTML = f.map(([h, p]) => `<div><h3>${h}</h3><p>${p}</p></div>`).join('');
 }
 
-function render(){
+function render() {
+  $('wl').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.wl === state.wl));
   $('sc').value = state.sc;
-  $('tr').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.tr === state.tr));
-  $('scdesc').textContent = scen[state.sc].description;
-  tiles(); polChart(); mixChart(); bandChart(); tierChart(); warmChart(); matrix();
+  answer(); laneBlock(); laneReq(); bandsChart(); mixChart(); matrix();
 }
-render(); findings();
-
-const hw = Object.fromEntries(D.hardware.map(h => [h.item, h.value]));
-$('foot').innerHTML = `<p><b>What is real and what is assumed.</b> The requests are real: Mooncake's FAST'25 trace release (one hour of chat and one hour of tool and agent traffic, plus a synthetic set), with arrival times, token counts and prefix-block hashes but no text. The cluster is a model: ${hw.nodes} nodes of ${hw.gpus_per_node} H100s serving Llama 3.1 70B at ${pct(hw.prefill_mfu)} utilisation, with every tier's size, bandwidth, latency and price in <code>seeds/tiers.csv</code>. Mooncake's own model and hardware are not public.</p>
-<p><b>What the simulation leaves out.</b> Queueing, decode, and bandwidth contention between concurrent requests are not modelled, and loading is not overlapped with compute, so absolute times are indicative. The comparisons between policies are the point. Storage is costed at purchase price over 36 months; GPU time at $${hw.gpu_hour_cost}/hour.</p>
-<p>Built with a Python replay simulator, dbt (39 tests, including an independent check of the FLOPs maths) on DuckDB and Snowflake · Traces: <a href="https://github.com/kvcache-ai/Mooncake" target="_blank" rel="noopener">kvcache-ai/Mooncake</a> (Apache-2.0) · <a href="https://github.com/evannwilsonn/reprise" target="_blank" rel="noopener">github.com/evannwilsonn/reprise</a></p>`;
+render(); findings(); facts();
+let rt, lastW = innerWidth; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (innerWidth !== lastW) { lastW = innerWidth; bandsChart(); mixChart(); } }, 150); });
 })();
 </script>
 </body>
