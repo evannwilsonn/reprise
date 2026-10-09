@@ -1,0 +1,20 @@
+# On every push: download the traces, run the simulator and its unit tests, and build and test
+# every dbt model on DuckDB. Proves the published numbers rebuild from scratch.
+name: ci
+on:
+  push: {branches: [main]}
+  workflow_dispatch: {}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - run: pip install -r requirements.txt
+      - run: python ingest/extract.py
+      - run: python -m pytest -q sim/tests
+      - run: python sim/simulate.py
+      - run: python ingest/load_raw.py
+      - run: dbt build --profiles-dir .

@@ -1,0 +1,44 @@
+name: reprise
+version: "1.0.0"
+config-version: 2
+profile: reprise
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  reprise:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+    marts:
+      +materialized: table
+      core:
+        +schema: core
+      reporting:
+        +schema: reporting
+
+seeds:
+  reprise:
+    +schema: reference
+    scenarios:
+      +column_types: {hbm_scale: double, dram_scale: double, ssd_scale: double, hdd_scale: double, hdd_read_scale: double}
+    tiers:
+      +column_types: {capacity_gb_per_node: double, read_gb_s_per_node: double, write_gb_s_per_node: double, access_latency_ms: double, purchase_usd_per_gb: double, rated_drive_writes_per_day: double}
+    hardware:
+      +column_types: {value: double}
+    policies:
+      +column_types: {unlimited: boolean}
+
+vars:
+  block_tokens: 512
+  # storage is costed as hardware bought outright and written off straight-line over this many months
+  amortisation_months: 36
+  hours_per_month: 730

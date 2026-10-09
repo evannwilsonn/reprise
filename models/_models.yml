@@ -1,0 +1,39 @@
+version: 2
+models:
+  - name: stg_trace_requests
+    description: One row per Mooncake request.
+    data_tests:
+      - unique_combination: {arguments: {columns: [trace, request_idx]}}
+    columns:
+      - name: input_tokens
+        data_tests:
+          - not_null
+          - value_between: {arguments: {min_value: 1, max_value: 200000}}
+      - name: blocks
+        description: Prefix blocks of 512 tokens; must equal ceil(input_tokens / 512) (assert_blocks_match_tokens).
+  - name: stg_sim_requests
+    data_tests:
+      - unique_combination: {arguments: {columns: [scenario_id, policy_id, trace, request_idx]}}
+    columns:
+      - name: policy_id
+        data_tests:
+          - relationships: {arguments: {to: ref('policies'), field: policy_id}}
+      - name: scenario_id
+        data_tests:
+          - relationships: {arguments: {to: ref('scenarios'), field: scenario_id}}
+      - name: ttft_ms
+        data_tests:
+          - not_null
+          - value_between: {arguments: {min_value: 0, max_value: 600000}}
+  - name: fct_simulations
+    data_tests:
+      - unique_combination: {arguments: {columns: [trace, policy_id, scenario_id]}}
+    columns:
+      - name: cached_share
+        data_tests:
+          - value_between: {arguments: {min_value: 0, max_value: 1}}
+  - name: rpt_policy_comparison
+    columns:
+      - name: share_of_ceiling
+        data_tests:
+          - value_between: {arguments: {min_value: 0, max_value: 1.0000001}}

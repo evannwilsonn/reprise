@@ -1,0 +1,26 @@
+version: 2
+seeds:
+  - name: tiers
+    description: Every hardware assumption about a storage tier, with where it comes from. Change these and re-run the simulator.
+    columns:
+      - name: tier
+        data_tests: [unique]
+  - name: policies
+    columns:
+      - name: policy_id
+        data_tests: [unique]
+  - name: scenarios
+    columns:
+      - name: scenario_id
+        data_tests: [unique]
+      - name: model_id
+        data_tests:
+          - relationships: {arguments: {to: ref('model_profile'), field: model_id}}
+  - name: model_profile
+    columns:
+      - name: model_id
+        data_tests: [unique]
+  - name: hardware
+    columns:
+      - name: item
+        data_tests: [unique]

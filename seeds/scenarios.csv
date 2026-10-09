@@ -1,0 +1,8 @@
+scenario_id,scenario_name,model_id,hbm_scale,dram_scale,ssd_scale,hdd_scale,hdd_read_scale,description
+base,Reference cluster,llama31_70b_fp16,1,1,1,1,1,The tier sizes in tiers.csv
+small_ssd,Quarter-size SSD tier,llama31_70b_fp16,1,1,0.25,1,1,"Less flash, so more context lands on hard drives"
+tiny_flash,Minimal flash and memory,llama31_70b_fp16,1,0.25,0.05,1,1,Shows when the hard-drive tier starts to matter
+fp8_kv,FP8 KV cache,llama31_70b_fp8,1,1,1,1,1,Same hardware; each block is half the size so every tier holds twice as much
+memory_pressure,Memory under pressure,llama31_70b_fp16,0.5,0.1,1,1,1,"GPU and server memory shared with other models, so most context has to live on flash or disk"
+no_flash,Memory pressure and no SSD,llama31_70b_fp16,0.5,0.1,0,1,1,Same pressure with hard drives as the only tier below memory
+no_flash_wide_hdd,"No SSD, 4x wider HDD pool",llama31_70b_fp16,0.5,0.1,0,1,4,"Memory pressure and no flash, with four times as many drives striped behind each node"

@@ -1,0 +1,8 @@
+item,value,unit,source_note
+gpus_per_node,8,gpus,8x H100 SXM node
+nodes,4,nodes,Sized so recomputing every token uses about half the cluster's prefill capacity on the conversation trace
+gpu_peak_tflops,989,TFLOPS,H100 SXM dense BF16 peak (NVIDIA datasheet)
+prefill_mfu,0.45,share,Assumed model FLOPs utilisation during prefill
+gpu_hour_cost,2.50,USD,Assumed on-demand-style price per H100 hour
+gpu_watts,700,W,H100 SXM max board power
+hbm_to_gpu_overhead_ms,0.05,ms,Per-block bookkeeping when the block is already in GPU memory

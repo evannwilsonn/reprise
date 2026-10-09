@@ -1,0 +1,11 @@
+version: 2
+sources:
+  - name: raw_mooncake
+    description: Mooncake FAST'25 request traces (kvcache-ai/Mooncake), landed unchanged.
+    tables:
+      - name: requests
+  - name: raw_sim
+    description: Output of sim/simulate.py, landed unchanged after a hash check against what the simulator recorded.
+    tables:
+      - name: requests
+      - name: runs

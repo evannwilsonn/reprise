@@ -1,0 +1,7 @@
+policy_id,policy_order,policy_name,tiers_used,admission,unlimited,description
+recompute,1,Recompute everything,,none,false,No reuse: every request prefills its whole prompt
+gpu_only,2,GPU memory only,hbm,all,false,Prefix cache in GPU memory with least-recently-used eviction (the usual default in serving stacks)
+gpu_dram,3,GPU + server memory,"hbm,dram",all,false,Evicted blocks move to host memory before being dropped
+all_tiers,4,All four tiers,"hbm,dram,ssd,hdd",all,false,Evicted blocks cascade down HBM -> DRAM -> SSD -> HDD; a hit is promoted back to the GPU
+all_tiers_reuse,5,All tiers + reuse-aware,"hbm,dram,ssd,hdd",reused,false,"Like all_tiers, but a block only goes below server memory once it has been reused; one-off context is dropped instead of written to disk"
+ceiling,6,Ceiling (unlimited GPU memory),hbm,all,true,Nothing is ever evicted: the most reuse this trace allows. Not buildable; it is the yardstick

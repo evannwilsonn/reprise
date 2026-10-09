@@ -1,0 +1,5 @@
+tier,tier_order,tier_name,capacity_gb_per_node,read_gb_s_per_node,write_gb_s_per_node,access_latency_ms,purchase_usd_per_gb,rated_drive_writes_per_day,source_note
+hbm,1,GPU memory (HBM),400,0,0,0,0,,"8 x 80 GB minus ~140 GB of FP16 weights and working space; included in the GPU-hour price"
+dram,2,Server memory (DRAM),1536,200,200,0.01,5.00,,"DDR5 server memory; read limited by 8 PCIe 5.0 links to the GPUs (~25 GB/s effective each)"
+ssd,3,NVMe SSD,30720,40,20,0.1,0.10,1,"4 x 7.68 TB read-intensive data-center NVMe per node (~10 GB/s read each in practice, rated 1 drive-write per day)"
+hdd,4,Hard drives (shared pool),245760,4,4,8,0.015,,"Each node's share of a networked pool: 10 x 24 TB drives at ~0.4 GB/s sequential each"
